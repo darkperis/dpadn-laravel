@@ -17,8 +17,6 @@ class EdgeportCache
 
         if($api_key != '' && $endpoint != '') {
 
-            // chech for multi urls and * and just /
-
             if($items == '*') {
                 $data = [
                     'purge' => 'all',
@@ -31,7 +29,12 @@ class EdgeportCache
                 $data = [];
                 $urls = explode(',', $items);
                 foreach ($urls as $url) {
-                    $data[] = $baseurl.$url;
+                    if($url == '/') {
+                        $data[] = $baseurl;
+                    }
+                    else {
+                        $data[] = $baseurl.$url;
+                    }
                 }
 
                 $data = [
@@ -61,7 +64,7 @@ class EdgeportCache
                     \Log::info('Purging started');
             }
             else {
-                \Log::error('Could not purge the cache.');
+                \Log::error('Could not purge the cache this time.');
             }
         }
     }

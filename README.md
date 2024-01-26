@@ -2,9 +2,8 @@
 
 This package allows you to use ADNcache together with Laravel.
 
-It provides two middlewares and one facade:
+It provides one facade:
 
-- ADNCache Middleware to control the cache-control header for Edgeport ADN Cache
 - ADNCache facade to handle purging
 
 ## Installation
@@ -28,20 +27,6 @@ In `config/app.php` you have to add the following code in your `aliases`:
     ...
     'ADNCache'   => Darkpony\ADNCache\ADNCache::class,
 ],
-```
-
-In `app/Http/Kernel.php` you have to add the two middlewares under `middleware` and `routeMiddleware`:
-
-```
-protected $middleware = [
-    ...
-    \Darkpony\ADNCache\ADNCacheMiddleware::class
-];
-
-protected $routeMiddleware = [
-    ...
-    'adncache' => \Darkpony\ADNCache\ADNCacheMiddleware::class
-];
 ```
 
 Copy `adncache.php` to `config/`:
@@ -70,7 +55,7 @@ If the `default_ttl` is set to `0`, then we won't return the `Cache-Control` res
 
 You can control the config settings in your `.env` file as such:
 
-- `ADNCACHE_API_KEY` - accepts api key
+- `ADNCACHE_API_KEY` - Specify the API Token for your Service at the Edgeport Platform
 - `ADNCACHE_ENDPOINT` - accepts endpoint
 - `ADNCACHE_ESI_ENABLED` - accepts `true` or `false` to whether you want ESI enabled or not globally; Default `false`
 - `ADNCACHE_DEFAULT_TTL` - accepts an integer, this value is in seconds; Default: `0`
@@ -82,19 +67,8 @@ You set the cache-control header for adncache using a middleware, so we can in o
 ```php
 Route::get('/', function() {
     return view('frontpage');
-});
+})->middleware('cache.headers:public;max_age=2628000;etag');
 
-Route::get('/about-us', function() {
-    return view('about-us');
-})->middleware('adncache:max-age=300;public');
-
-Route::get('/contact', function() {
-    return view('contact');
-})->middleware('adncache:max-age=10;private;esi=on');
-
-Route::get('/admin', function() {
-    return view('admin');
-})->middleware('adncache:no-cache');
 ```
 
 ### purge
@@ -133,13 +107,6 @@ ADNCache::purge('/blog,/about-us,/');
 // or
 ADNCache::purgeItems(['/blog', '/about-us', '/']);
 ````
-
-```php
-ADNCache::purge('*', false);
-// or
-ADNCache::purgeAll(false);
-```
-
 
 ### Laravel Authentication
 
