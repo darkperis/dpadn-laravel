@@ -62,19 +62,19 @@ class EdgeportCache
 
             $client = new Client();
             $res = $client->request('POST', $endpoint, $options);
-            $ret = $res->getBody()->getContents();
+            $response = $res->getBody()->getContents();
+            $result = json_decode($response, true);
 
-            if($ret && isset($ret['success']) && $ret['success'] == true) {
-                if(isset($ret['message']))
-                    \Log::info($ret['message']);
-                else 
-                    \Log::info('Purging started');
+            if ( ! empty( $result['error'] ) ) {
+                \Log::info('Edgeport: Error while trying to purge cache: ' . $result['error']['message']);
             }
-            else {
-                \Log::error('Could not purge the cache this time.');
-                if($ret)
-                \Log::error($ret);
+
+            if ( ! $result['success'] ) {
+                \Log::info('Edgeport: Unknown error while trying to purge cache.');
             }
+
+            \Log::info('Edgeport: Cache purged successfully');
+
         }
     }
 
