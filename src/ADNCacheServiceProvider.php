@@ -26,7 +26,7 @@ class ADNCacheServiceProvider extends ServiceProvider
     public function boot(Router $router, Kernel $kernel)
     {
         //$router->aliasMiddleware('adncache', ADNCacheMiddleware::class);
-        $kernel->pushMiddleware(ADNCacheMiddleware::class);
+        //$kernel->pushMiddleware(ADNCacheMiddleware::class);
 
         $this->publishes([
             __DIR__ . '/../config/adncache.php' => config_path('adncache.php'),
