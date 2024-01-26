@@ -72,6 +72,8 @@ class EdgeportCache
             }
             else {
                 \Log::error('Could not purge the cache this time.');
+                if($ret)
+                \Log::error($ret);
             }
         }
     }
