@@ -25,6 +25,13 @@ class EdgeportCache
                     ]
                 ];
             }
+            elseif($items == '/') {
+
+                $data = [
+                    'purge' => 'bulk',
+                    'url' => [$baseurl]
+                ];
+            }
             else {
                 $data = [];
                 $urls = explode(',', $items);
